@@ -26,18 +26,17 @@ export function HeroSection() {
             className={`space-y-6 transition-all duration-1000 ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
           >
             <div className="inline-block bg-[#5C9DF1]/10 text-[#5C9DF1] px-4 py-1.5 rounded-full text-sm font-medium">
-              Nuevo en México
+            Cumplimos LFPC & LFPDPPP
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-black">
-              Evita cancelaciones y optimiza tu agenda de citas dentales
+            Reduce cancelaciones, llena tu agenda dental
             </h1>
             <p className="text-xl text-slate-600">
-              Depósito de reserva, recordatorios automáticos y marketplace para
-              atraer nuevos pacientes.
+            Depósito, Recordatorios, Marketplace. Reduce ausencias un 50%
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Button size="lg" className="bg-[#5C9DF1] hover:bg-[#5C9DF1]/90">
-                Recibe una prueba gratis
+              Probar gratis 14 días
               </Button>
               <Button
                 className="text-gray-600 bg-[#5C9DF1] hover:bg-[#5C9DF1]/90"
