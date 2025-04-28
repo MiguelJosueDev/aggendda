@@ -27,23 +27,46 @@ export function RegistrationForm() {
     setFormData((prev) => ({ ...prev, userType: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          adminEmail: 'josuecruz1224@outlook.com'
+        }),
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        toast({
+          title: "¡Pre-registro exitoso!",
+          description: "Te contactaremos pronto con más información.",
+        });
+        setFormData({
+          name: "",
+          email: "",
+          userType: "patient",
+        });
+      } else {
+        throw new Error(result.message || 'Error al procesar el registro');
+      }
+    } catch (error) {
+      console.error('Error:', error);
       toast({
-        title: "¡Pre-registro exitoso!",
-        description: "Te contactaremos pronto con más información.",
+        title: "Error al registrarse",
+        description: "Hubo un problema al procesar tu solicitud. Inténtalo de nuevo.",
       });
+    } finally {
       setIsSubmitting(false);
-      setFormData({
-        name: "",
-        email: "",
-        userType: "patient",
-      });
-    }, 1500);
+    }
   };
 
   return (

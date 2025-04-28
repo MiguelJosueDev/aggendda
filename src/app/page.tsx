@@ -127,7 +127,7 @@ export default function Home() {
               <h3 className="font-medium mb-3">Legal</h3>
               <ul className="space-y-2 text-sm text-slate-300">
                 <li>
-                  <Link href="#" className="hover:text-white">
+                  <Link href="/terminos-y-condiciones" className="hover:text-white">
                     Términos y Condiciones
                   </Link>
                 </li>
