@@ -1,86 +1,83 @@
-import { toast as sonnerToast } from 'sonner';
+"use client";
 
-type ToastType = 'default' | 'success' | 'error' | 'loading' | 'info';
+import { useState } from "react";
 
-interface ToastProps {
+export type ToastType = "default" | "success" | "error" | "warning" | "info";
+
+export interface Toast {
+  id: string;
   title?: string;
   description?: string;
-  message?: string;
   type?: ToastType;
-  options?: any;
+  duration?: number;
 }
 
-export const toast = {
-  success: (message: string | ToastProps, options?: any) => {
-    if (typeof message === 'string') {
-      return sonnerToast.success(message, options);
-    } else {
-      const { title, description } = message;
-      return sonnerToast.success(title, {
-        description,
-        ...options
-      });
-    }
-  },
-  error: (message: string | ToastProps, options?: any) => {
-    if (typeof message === 'string') {
-      return sonnerToast.error(message, options);
-    } else {
-      const { title, description } = message;
-      return sonnerToast.error(title, {
-        description,
-        ...options
-      });
-    }
-  },
-  loading: (message: string | ToastProps, options?: any) => {
-    if (typeof message === 'string') {
-      return sonnerToast.loading(message, options);
-    } else {
-      const { title, description } = message;
-      return sonnerToast.loading(title, {
-        description,
-        ...options
-      });
-    }
-  },
-  info: (message: string | ToastProps, options?: any) => {
-    if (typeof message === 'string') {
-      return sonnerToast.info(message, options);
-    } else {
-      const { title, description } = message;
-      return sonnerToast.info(title, {
-        description,
-        ...options
-      });
-    }
-  },
-  default: (message: string | ToastProps, options?: any) => {
-    if (typeof message === 'string') {
-      return sonnerToast(message, options);
-    } else {
-      const { title, description } = message;
-      return sonnerToast(title, {
-        description,
-        ...options
-      });
-    }
-  },
-  dismiss: (toastId?: string) => sonnerToast.dismiss(toastId),
-  custom: (props: ToastProps) => {
-    const { title, description, type = 'default', options = {} } = props;
-    
-    switch (type) {
-      case 'success':
-        return sonnerToast.success(title, { description, ...options });
-      case 'error':
-        return sonnerToast.error(title, { description, ...options });
-      case 'loading':
-        return sonnerToast.loading(title, { description, ...options });
-      case 'info':
-        return sonnerToast.info(title, { description, ...options });
-      default:
-        return sonnerToast(title, { description, ...options });
-    }
-  }
-} 
+interface ToastOptions {
+  title?: string;
+  description?: string;
+  type?: ToastType;
+  duration?: number;
+}
+
+const DEFAULT_TOAST_DURATION = 5000; // 5 seconds
+
+// Create a simple store to manage toasts
+let toasts: Toast[] = [];
+let listeners: ((toasts: Toast[]) => void)[] = [];
+
+const emitChange = () => {
+  listeners.forEach((listener) => {
+    listener(toasts);
+  });
+};
+
+export function toast(options: ToastOptions) {
+  const id = Math.random().toString(36).substring(2, 9);
+  const newToast: Toast = {
+    id,
+    title: options.title,
+    description: options.description,
+    type: options.type || "default",
+    duration: options.duration || DEFAULT_TOAST_DURATION,
+  };
+
+  toasts = [...toasts, newToast];
+  emitChange();
+
+  // Auto-dismiss after duration
+  setTimeout(() => {
+    dismissToast(id);
+  }, newToast.duration);
+
+  return id;
+}
+
+export function dismissToast(id: string) {
+  toasts = toasts.filter((toast) => toast.id !== id);
+  emitChange();
+}
+
+export function useToast() {
+  const [toastList, setToastList] = useState<Toast[]>(toasts);
+
+  // Subscribe to changes
+  useState(() => {
+    const handleChange = (updatedToasts: Toast[]) => {
+      setToastList([...updatedToasts]);
+    };
+
+    listeners.push(handleChange);
+    return () => {
+      listeners = listeners.filter((listener) => listener !== handleChange);
+    };
+  });
+
+  return {
+    toasts: toastList,
+    toast,
+    dismiss: dismissToast,
+  };
+}
+
+// Export the toast function directly for convenience
+export { toast as default };

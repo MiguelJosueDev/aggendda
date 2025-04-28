@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import { Button } from "./ui/button"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { useInView } from "react-intersection-observer"
+import { useState } from "react";
+import Image from "next/image";
+import { Button } from "@/app/ui/Button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useInView } from "react-intersection-observer";
 
 export function DemoSection() {
-  const [currentSlide, setCurrentSlide] = useState(0)
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
-  })
+  });
 
   const slides = [
     {
@@ -29,22 +29,24 @@ export function DemoSection() {
       description: "Notificaciones automáticas para no olvidar tu cita",
       image: "/smartphone-appointment-alert.png",
     },
-  ]
+  ];
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1))
-  }
+    setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+  };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1))
-  }
+    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+  };
 
   return (
     <section className="py-20 bg-white">
       <div className="container">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">Demo Interactiva</h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold mb-4 text-black">
+            Demo Interactiva
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-black">
             Mira cómo funciona nuestra plataforma en la práctica
           </p>
         </div>
@@ -61,8 +63,12 @@ export function DemoSection() {
               className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-8">
-              <h3 className="text-2xl font-bold text-white mb-2">{slides[currentSlide].title}</h3>
-              <p className="text-white/80">{slides[currentSlide].description}</p>
+              <h3 className="text-2xl font-bold text-white mb-2">
+                {slides[currentSlide].title}
+              </h3>
+              <p className="text-white/80">
+                {slides[currentSlide].description}
+              </p>
             </div>
           </div>
 
@@ -100,5 +106,5 @@ export function DemoSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
